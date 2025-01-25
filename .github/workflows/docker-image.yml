@@ -35,4 +35,4 @@ jobs:
         context: "{{defaultContext}}:network_backend"
         platforms: linux/arm64 
         push: true
-        tags: christianschwartz/network
+        tags: christianschwartz/network:latest

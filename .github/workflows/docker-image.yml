@@ -24,6 +24,9 @@ jobs:
         cd network_frontend
         npm install
         npm exec vite build
+        rm -rf ../network_backend/static/*
+        cp -r dist ../network_backend/static
+        cat ../network_backend/static/index.html
     - name: Docker Setup Buildx
       uses: docker/setup-buildx-action@v3.8.0
     - name: Build the Docker image

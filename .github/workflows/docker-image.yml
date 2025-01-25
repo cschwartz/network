@@ -28,3 +28,7 @@ jobs:
         platforms: linux/arm64,linux/amd64
         push: true
         tags: christianschwartz/network:latest
+        build-args: |
+          "VITE_BACKEND_URL=${{FRONTEND_BACKEND_URL}}"
+          "VITE_NUM_PORTS=${{FRONTEND_NUM_PORTS}}"
+          "VITE_UPDATE_INTERVAL=${{FRONTEND_UPDATE_INTERVAL}}"

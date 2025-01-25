@@ -1,6 +1,13 @@
 # Stage 1: Build the Vite site
 FROM node:18-alpine AS build-vite
 
+ARG FRONTEND_BACKEND_URL
+ENV VITE_BACKEND_URL ${FRONTEND_BACKEND_URL}
+ARG FRONTEND_NUM_PORTS
+ENV VITE_NUM_PORTS ${FRONTEND_NUM_PORTS}
+ARG FRONTEND_UPDATE_INTERVAL
+ENV VITE_UPDATE_INTERVAL ${FRONTEND_UPDATE_INTERVAL}
+
 WORKDIR /app
 
 COPY ./network_frontend/package.json ./network_frontend/package-lock.json ./

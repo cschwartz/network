@@ -34,6 +34,6 @@ jobs:
         push: true
         tags: christianschwartz/network:latest
         build-args: |
-          "VITE_BACKEND_URL=$FRONTEND_BACKEND_URL"
-          "VITE_NUM_PORTS=$FRONTEND_NUM_PORTS"
-          "VITE_UPDATE_INTERVAL=$FRONTEND_UPDATE_INTERVAL"
+          "VITE_BACKEND_URL= ${{ vars.FRONTEND_BACKEND_URL }}"
+          "VITE_NUM_PORTS=${{ vars.VITE_NUM_PORTS }}"
+          "VITE_UPDATE_INTERVAL=${{ vars.VITE_UPDATE_INTERVAL }}"

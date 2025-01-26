@@ -214,7 +214,9 @@ const NavBar = ({ probeActive }: NavBarProps) => {
 
   const handleShutdown = async () => {
     setBusy(true);
-    await fetch(`${import.meta.env.VITE_BACKEND_URL}/probe/shutdown`, {
+
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || "/api";
+    await fetch(`${backendUrl}/probe/shutdown`, {
       method: "POST",
     });
   };
@@ -291,7 +293,7 @@ function App({ numPorts, updateInterval }: AppProps) {
   );
 
   const fetchData = async () => {
-    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || "/api";
     const response = await fetch(`${backendUrl}/`);
     const data = await response.json();
     setSwitchStatus(data);

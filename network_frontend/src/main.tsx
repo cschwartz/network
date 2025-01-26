@@ -6,8 +6,8 @@ import App from "./App.tsx";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <App
-      numPorts={import.meta.env.VITE_NUM_PORTS}
-      updateInterval={import.meta.env.VITE_UPDATE_INTERVAL}
+      numPorts={import.meta.env.VITE_NUM_PORTS || 26}
+      updateInterval={import.meta.env.VITE_UPDATE_INTERVAL || 10000}
     />
   </StrictMode>
 );

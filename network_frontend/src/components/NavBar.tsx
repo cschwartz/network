@@ -38,8 +38,8 @@ const NavBar = ({ backendUrl, probeActive }: NavBarProps) => {
           </div>
           <div className="flex items-center">
             <NavBarButton
-              primaryColor={probeActive ? "orange-200" : "gray-400"}
-              hoverColor={probeActive ? "orange-300" : "gray-500"}
+              primaryColor={probeActive ? "orange-200" : "gray-500"}
+              hoverColor={probeActive ? "orange-300" : "gray-600"}
               disabled={busy || !probeActive}
               onClick={handleShutdown}
             >

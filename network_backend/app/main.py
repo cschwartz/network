@@ -83,6 +83,9 @@ def get_switch_port_for_ip(session, target_ip, switch_mac) -> Optional[int]:
     clients_url = f"/stat/sta"
     clients_response = get(session, clients_url)
 
+    if clients_response is None:
+        logger.error("Failed to get clients.")
+        return None
 
     clients = clients_response.get("data", [])
 

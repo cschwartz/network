@@ -1,0 +1,172 @@
+# create a k8s namespace named network
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: network
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: network
+  labels:
+    app: network
+  namespace: network
+spec:
+  replicas: 1
+  strategy: {}
+  selector:
+    matchLabels:
+      app: network
+  template:
+    metadata:
+      labels:
+        app: network
+    spec:
+      containers:
+      - name: network
+        image: christianschwartz/network:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        env:
+        - name: TARGET_IP
+          valueFrom:
+            secretKeyRef:
+              name: network-secrets
+              key: TARGET_IP
+        - name: TARGET_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: network-secrets
+              key: TARGET_USERNAME
+        - name: TARGET_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: network-secrets
+              key: TARGET_PASSWORD
+        - name: CONTROLLER_URL
+          valueFrom:
+            secretKeyRef:
+              name: network-secrets
+              key: CONTROLLER_URL
+        - name: USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: network-secrets
+              key: USERNAME
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: network-secrets
+              key: PASSWORD
+        - name: SITE_NAME
+          valueFrom:
+            secretKeyRef:
+              name: network-secrets
+              key: SITE_NAME
+        - name: SWITCH_MAC
+          valueFrom:
+            secretKeyRef:
+              name: network-secrets
+              key: SWITCH_MAC
+        - name: NUM_PORTS
+          value: "26"
+        - name: PORT_STATUSES__1
+          value: 'need_validation'
+        - name: PORT_STATUSES__2
+          value: 'need_validation'
+        - name: PORT_STATUSES__3
+          value: 'need_validation'
+        - name: PORT_STATUSES__4
+          value: 'need_validation'
+        - name: PORT_STATUSES__5
+          value: 'need_validation'
+        - name: PORT_STATUSES__6
+          value: 'need_validation'
+        - name: PORT_STATUSES__7
+          value: 'need_validation'
+        - name: PORT_STATUSES__8
+          value: 'need_validation'
+        - name: PORT_STATUSES__9
+          value: 'need_validation'
+        - name: PORT_STATUSES__10
+          value: 'need_validation'
+        - name: PORT_STATUSES__11
+          value: 'pre_validated'
+        - name: PORT_STATUSES__12
+          value: 'pre_validated'
+        - name: PORT_STATUSES__13
+          value: 'pre_validated'
+        - name: PORT_STATUSES__14
+          value: 'need_validation'
+        - name: PORT_STATUSES__15
+          value: 'not_used'
+        - name: PORT_STATUSES__16
+          value: 'not_used'
+        - name: PORT_STATUSES__17
+          value: 'not_used'
+        - name: PORT_STATUSES__18
+          value: 'not_used'
+        - name: PORT_STATUSES__19
+          value: 'not_used'
+        - name: PORT_STATUSES__20
+          value: 'not_used'
+        - name: PORT_STATUSES__21
+          value: 'not_used'
+        - name: PORT_STATUSES__22
+          value: 'not_used'
+        - name: PORT_STATUSES__23
+          value: 'pre_validated'
+        - name: PORT_STATUSES__24
+          value: 'pre_validated'
+        - name: PORT_STATUSES__25
+          value: 'pre_validated'
+        - name: PORT_STATUSES__26
+          value: 'not_used'
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+      restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: network
+  namespace: network
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+  selector:
+    app: network
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: network
+  namespace: network
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - ports.cloud-formation.cschwartz.net
+      secretName: network-tls
+  rules:
+    - host: "ports.cloud-formation.cschwartz.net"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: network
+                port:
+                  number: 80

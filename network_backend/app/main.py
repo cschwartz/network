@@ -107,6 +107,7 @@ def is_reachable(ip: IPv4Address) -> bool:
         result = subprocess.run(['ping', '-c', '1', str(ip)], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         return result.returncode == 0
     except Exception as e:
+        logger.error("Error pinging target machine: %s", e)
         return False
 
 

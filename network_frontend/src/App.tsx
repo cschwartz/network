@@ -121,6 +121,7 @@ const Port = ({ port, active, portsChecked, setPortsChecked }: PortProps) => {
 };
 
 type AppProps = {
+  backendUrl: string;
   numPorts: number;
   updateInterval: number;
 };
@@ -207,15 +208,15 @@ const LoadingSpinner = () => {
 
 type NavBarProps = {
   probeActive: boolean;
+  backendUrl: string;
 };
 
-const NavBar = ({ probeActive }: NavBarProps) => {
+const NavBar = ({ backendUrl, probeActive }: NavBarProps) => {
   const [busy, setBusy] = useState(false);
 
   const handleShutdown = async () => {
     setBusy(true);
 
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || "/api";
     await fetch(`${backendUrl}/probe/shutdown`, {
       method: "POST",
     });
@@ -276,7 +277,7 @@ const NavBar = ({ probeActive }: NavBarProps) => {
   );
 };
 
-function App({ numPorts, updateInterval }: AppProps) {
+function App({ backendUrl, numPorts, updateInterval }: AppProps) {
   const makeDefaultPortChecked = (numPorts: number): PortChecked[] => {
     return Array.from({ length: numPorts }, () => ({
       checked: false,
@@ -292,21 +293,28 @@ function App({ numPorts, updateInterval }: AppProps) {
     defaultPortsChecked
   );
 
-  const fetchData = async () => {
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || "/api";
+  useInterval(async () => {
     const response = await fetch(`${backendUrl}/`);
     const data = await response.json();
     setSwitchStatus(data);
-  };
+  }, updateInterval);
 
-  useInterval(fetchData, updateInterval);
   useEffect(() => {
-    fetchData();
-  }, []);
+    const updateData = async () => {
+      const response = await fetch(`${backendUrl}/`);
+      const data = await response.json();
+      setSwitchStatus(data);
+    };
+
+    updateData();
+  }, [backendUrl]);
 
   return (
     <>
-      <NavBar probeActive={switchStatus?.target_port !== undefined} />
+      <NavBar
+        backendUrl={backendUrl}
+        probeActive={switchStatus?.target_port !== undefined}
+      />
       <div className="py-4">
         {switchStatus ? (
           <PortTable

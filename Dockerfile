@@ -21,6 +21,8 @@ FROM python:3.12-slim
 COPY --from=build-vite /app/dist /app/network_backend/static
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
+RUN apt-get update && apt-get install -y openssh-client iputils-ping
+
 COPY . /app
 
 WORKDIR /app/network_backend

@@ -28,8 +28,8 @@ const NavBarButton = ({
     "text-white",
     "shadow-sm",
     { "cursor-not-allowed": disabled },
-    `bg-${primaryColor}`,
-    `hover:bg-${hoverColor}`
+    primaryColor,
+    `hover:${hoverColor}`
   );
   return (
     <button

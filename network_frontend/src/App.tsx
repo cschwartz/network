@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useInterval, useLocalStorage } from "react-use";
 import LoadingSpinner from "./components/LoadingSpinner";
 import NavBar from "./components/NavBar";
@@ -22,21 +22,17 @@ function App({ backendUrl, numPorts, updateInterval }: AppProps) {
     defaultPortsChecked
   );
 
-  useInterval(async () => {
+  const fetchData = useCallback(async () => {
     const response = await fetch(`${backendUrl}/`);
     const data = await response.json();
     setSwitchStatus(data);
-  }, updateInterval);
+  }, [backendUrl]);
+
+  useInterval(fetchData, updateInterval);
 
   useEffect(() => {
-    const updateData = async () => {
-      const response = await fetch(`${backendUrl}/`);
-      const data = await response.json();
-      setSwitchStatus(data);
-    };
-
-    updateData();
-  }, [backendUrl]);
+    fetchData();
+  }, [fetchData]);
 
   return (
     <>
